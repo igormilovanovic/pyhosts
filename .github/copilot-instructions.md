@@ -28,8 +28,9 @@ The project consists of two main classes:
 - Use `pycodestyle pyhosts/ --max-line-length=120` to check style compliance
 
 ### Dependencies
-- Core dependency: `netaddr>=0.10.0`
-- Test dependencies: `pytest>=7.0.0`, `pytest-cov>=4.0.0`, `pylint>=3.0.0`, `pycodestyle>=2.11.0`
+- Core dependencies: See `requirements.txt`
+- Test dependencies: See `test-requirements.txt`
+- Key dependency: `netaddr` for IP address handling
 
 ## Testing
 
