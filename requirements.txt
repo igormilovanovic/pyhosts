@@ -1,1 +1,1 @@
-netaddr>=0.10.0
+# No external dependencies - using Python 3.10+ built-in modules
