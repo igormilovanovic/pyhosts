@@ -43,7 +43,7 @@ class Hosts(object):
         return self._hosts.__iter__()
 
     def _file_path(self):
-        if platform.system() == "Linux":
+        if platform.system() in ("Linux", "Darwin"):
             return "/etc/hosts"
         elif platform.system() == "Windows":
             return r"c:/windows/system32/drivers/etc/hosts"
