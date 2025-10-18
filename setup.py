@@ -9,7 +9,7 @@ setup(name="pyhosts",
       description="Pythonic way to manage hosts file.",
       author="Igor Milovanovic",
       author_email="igor@tnkng.com",
-      url="http://github.com/igormilovanovic/pyhosts/",
+      url="https://github.com/igormilovanovic/pyhosts/",
       packages=['pyhosts'],
       classifiers=[
           'Development Status :: 3 - Alpha',
