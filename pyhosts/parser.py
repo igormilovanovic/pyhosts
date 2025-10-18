@@ -1,6 +1,7 @@
 """Parser for reading and writing hosts files."""
 
 import logging
+import os
 import shutil
 import tempfile
 from pathlib import Path
@@ -102,7 +103,6 @@ class HostsFileParser:
                     f.write(host.to_line())
 
             # Close the file descriptor
-            import os
             os.close(temp_fd)
             temp_fd = None
 
@@ -118,7 +118,6 @@ class HostsFileParser:
             logger.error(f"Error writing hosts file {file_path}: {e}")
             # Clean up temp file if it exists
             if temp_fd is not None:
-                import os
                 try:
                     os.close(temp_fd)
                 except OSError:
