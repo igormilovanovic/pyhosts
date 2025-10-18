@@ -19,9 +19,9 @@ class TestBaseCases(unittest.TestCase):
         elif platform.system() == "Windows":
             expected_path = r"c:/windows/system32/drivers/etc/hosts"
         else:
-            # For unsupported platforms, this test will fail in setUp
-            # when Hosts() raises PlatformNotSupportedException
-            self.skipTest("Unsupported platform")
+            # This branch should not be reached since setUp would have already
+            # raised PlatformNotSupportedException when creating Hosts()
+            self.fail("Unexpected platform: %s" % platform.system())
         self.assertEqual(expected_path, self.myhosts.file_path)
 
     def test_content_empty(self):
