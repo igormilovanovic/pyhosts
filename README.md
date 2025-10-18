@@ -24,10 +24,17 @@ Examples
     >>> myhosts.hostname.igor4.ipadress 
     ValueError: No such host entry in this hosts object.
 
+Requirements
+============
+
+- Python 3.8 or higher
+- netaddr
+
 Contribute
 ==========
 
-- python setup.py test to run tests
+- `pytest test/` to run tests
+- `pycodestyle pyhosts/ --max-line-length=120` to check code style
 
 Random notes
 ============

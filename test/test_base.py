@@ -1,6 +1,4 @@
 import unittest
-from nose.tools import nottest
-from mock import MagicMock
 
 from pyhosts import Hosts, Host
 
@@ -14,13 +12,13 @@ class TestBaseCases(unittest.TestCase):
         self.myhosts = Hosts()
 
     def test_one(self):
-        self.assertEquals("/etc/hosts", self.myhosts.file_path)
+        self.assertEqual("/etc/hosts", self.myhosts.file_path)
 
     def test_content_empty(self):
         self.myhosts._readlines = lambda x: []
         entries = [i for i in self.myhosts]
         expected = []
-        self.assertEquals(expected, entries)
+        self.assertEqual(expected, entries)
 
     def test_content_one_entry(self):
         self.myhosts._readlines = lambda x: ['127.0.0.1\t\tlocalhost.'
@@ -28,7 +26,7 @@ class TestBaseCases(unittest.TestCase):
         entries = self.myhosts._rows()
         expected = [Host('127.0.0.1', 'localhost.localdomain', 'localhost',
                          None)]
-        self.assertEquals(expected, entries)
+        self.assertEqual(expected, entries)
 
     def test_content_many_entries(self):
         self.myhosts._readlines = lambda x: ['127.0.0.1\t\tlocalhost.'
@@ -45,12 +43,12 @@ class TestBaseCases(unittest.TestCase):
                     Host('172.19.29.156', 'igor', None, None),
                     Host('192.168.122.167', 'marev3', None, None)]
 
-        self.assertEquals(expected, entries)
+        self.assertEqual(expected, entries)
 
     def test_read_host(self):
         self.myhosts._readlines = lambda x: ['1.1.1.1\tigor', ]
-        self.assertEquals(IPAddress('1.1.1.1'), self.myhosts.igor.ipaddress)
-        self.assertEquals('igor', self.myhosts.igor.hostname)
+        self.assertEqual(IPAddress('1.1.1.1'), self.myhosts.igor.ipaddress)
+        self.assertEqual('igor', self.myhosts.igor.hostname)
 
     def test_format_same_as_file(self):
         _readlines = ['127.0.0.1\tlocalhost.localdomain\tlocalhost\n',
@@ -61,4 +59,4 @@ class TestBaseCases(unittest.TestCase):
         entries = [host for host in self.myhosts]
 
         for first, second in zip(_readlines, entries):
-            self.assertEquals(first, str(second))
+            self.assertEqual(first, str(second))

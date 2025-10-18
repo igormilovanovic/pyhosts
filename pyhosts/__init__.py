@@ -2,7 +2,7 @@ import platform
 from netaddr import IPAddress
 from netaddr.core import AddrFormatError
 
-from host import Host
+from .host import Host
 
 
 class PlatformNotSupportedException(Exception):
@@ -93,4 +93,3 @@ class Hosts(object):
         with open(path, "w") as hosts_file:
             hosts_file.write("# Written by Pyhosts\n\n")
             hosts_file.writelines([str(i) for i in self])
-
