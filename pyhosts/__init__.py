@@ -4,6 +4,8 @@ from netaddr.core import AddrFormatError
 
 from .host import Host
 
+__all__ = ['Hosts', 'Host']
+
 
 class PlatformNotSupportedException(Exception):
     pass
@@ -93,6 +95,3 @@ class Hosts(object):
         with open(path, "w") as hosts_file:
             hosts_file.write("# Written by Pyhosts\n\n")
             hosts_file.writelines([str(i) for i in self])
-
-
-__all__ = ['Hosts', 'Host']
