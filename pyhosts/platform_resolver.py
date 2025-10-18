@@ -44,7 +44,7 @@ class WindowsResolver(PlatformResolver):
         Returns:
             Path to C:\\Windows\\System32\\drivers\\etc\\hosts
         """
-        return Path('C:/Windows/System32/drivers/etc/hosts')
+        return Path('C:') / 'Windows' / 'System32' / 'drivers' / 'etc' / 'hosts'
 
 
 class PlatformResolverFactory:
