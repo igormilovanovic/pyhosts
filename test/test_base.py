@@ -1,4 +1,5 @@
 import unittest
+import platform
 
 from pyhosts import Hosts, Host
 
@@ -12,7 +13,16 @@ class TestBaseCases(unittest.TestCase):
         self.myhosts = Hosts()
 
     def test_one(self):
-        self.assertEqual("/etc/hosts", self.myhosts.file_path)
+        # Test that the file path is set correctly based on platform
+        if platform.system() in ("Linux", "Darwin"):
+            expected_path = "/etc/hosts"
+        elif platform.system() == "Windows":
+            expected_path = r"c:/windows/system32/drivers/etc/hosts"
+        else:
+            # For unsupported platforms, this test will fail in setUp
+            # when Hosts() raises PlatformNotSupportedException
+            self.skipTest("Unsupported platform")
+        self.assertEqual(expected_path, self.myhosts.file_path)
 
     def test_content_empty(self):
         self.myhosts._readlines = lambda x: []
