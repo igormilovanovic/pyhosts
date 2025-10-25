@@ -32,7 +32,7 @@ class UnixResolver(PlatformResolver):
         Returns:
             Path to /etc/hosts
         """
-        return Path('/etc/hosts')
+        return Path('/etc') / 'hosts'
 
 
 class WindowsResolver(PlatformResolver):
