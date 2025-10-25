@@ -39,9 +39,9 @@ class Host:
         if not isinstance(self.aliases, tuple):
             raise TypeError(f"aliases must be a tuple, got {type(self.aliases)}")
 
-        # Validate that comment doesn't contain newlines
-        if self.comment and '\n' in self.comment:
-            raise ValueError("comment cannot contain newlines")
+        # Validate that comment doesn't contain newlines or tab characters
+        if self.comment and ('\n' in self.comment or '\t' in self.comment):
+            raise ValueError("comment cannot contain newlines or tab characters")
 
     @classmethod
     def from_line(cls, line: str) -> Optional['Host']:
