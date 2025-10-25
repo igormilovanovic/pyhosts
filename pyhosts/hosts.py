@@ -123,9 +123,11 @@ class Hosts(MutableSequence):
         if not allow_duplicates:
             # Check for duplicates by hostname or IP
             for existing in self._hosts:
-                if (existing.hostname == host.hostname or
-                        existing.ip_address == host.ip_address or
-                        any(alias in existing.all_names for alias in host.all_names)):
+                if (
+                    existing.hostname == host.hostname or
+                    existing.ip_address == host.ip_address or
+                    set(existing.all_names) & set(host.all_names)
+                ):
                     raise DuplicateEntryError(
                         f"Host entry conflicts with existing entry: {existing}"
                     )
