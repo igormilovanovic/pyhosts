@@ -54,7 +54,8 @@ class HostsFileParser:
         return hosts
 
     @staticmethod
-    def write(file_path: Path, hosts: List[Host], backup: bool = False) -> None:
+    def write(file_path: Path, hosts: List[Host], backup: bool = False,
+              write_header: bool = True) -> None:
         """Write hosts to a file using atomic write operation.
 
         Uses a temporary file and atomic rename to ensure the write is safe.
@@ -63,6 +64,7 @@ class HostsFileParser:
             file_path: Path to the hosts file
             hosts: List of Host objects to write
             backup: If True, create a backup of the original file
+            write_header: If True, add a header comment identifying the file as managed by pyhosts
 
         Raises:
             IOError: If file cannot be written
@@ -98,9 +100,10 @@ class HostsFileParser:
 
             # Write content to temp file using the path directly
             with open(temp_path, 'w', encoding='utf-8') as f:
-                # Write header
-                f.write("# Managed by pyhosts\n")
-                f.write("# https://github.com/igormilovanovic/pyhosts\n\n")
+                # Write header if requested
+                if write_header:
+                    f.write("# Managed by pyhosts\n")
+                    f.write("# https://github.com/igormilovanovic/pyhosts\n\n")
 
                 # Write all host entries
                 for host in hosts:
