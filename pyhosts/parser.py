@@ -83,6 +83,7 @@ class HostsFileParser:
         temp_fd = None
         temp_path = None
 
+        temp_path = None
         try:
             # Create temp file in same directory as target for atomic rename
             temp_fd, temp_path_str = tempfile.mkstemp(
@@ -92,8 +93,11 @@ class HostsFileParser:
             )
             temp_path = Path(temp_path_str)
 
-            # Write content to temp file
-            with open(temp_fd, 'w', encoding='utf-8', closefd=False) as f:
+            # Close the file descriptor immediately, we'll use the path
+            os.close(temp_fd)
+
+            # Write content to temp file using the path directly
+            with open(temp_path, 'w', encoding='utf-8') as f:
                 # Write header
                 f.write("# Managed by pyhosts\n")
                 f.write("# https://github.com/igormilovanovic/pyhosts\n\n")
@@ -102,13 +106,19 @@ class HostsFileParser:
                 for host in hosts:
                     f.write(host.to_line())
 
-            # Close the file descriptor
-            os.close(temp_fd)
-            temp_fd = None
+            # Set secure permissions before copying from original
+            # Default to read/write for owner and group, read for others (0o644)
+            os.chmod(temp_path, 0o644)
 
             # Copy permissions from original file if it exists
             if file_path.exists():
-                shutil.copystat(file_path, temp_path)
+                # Get the original file's permissions
+                original_stat = file_path.stat()
+                # Only copy if permissions are reasonably secure (not world-writable)
+                if not (original_stat.st_mode & 0o002):
+                    shutil.copystat(file_path, temp_path)
+                else:
+                    logger.warning(f"Original file has insecure permissions, using 0o644 instead")
 
             # Atomic rename
             temp_path.replace(file_path)
@@ -117,11 +127,6 @@ class HostsFileParser:
         except Exception as e:
             logger.error(f"Error writing hosts file {file_path}: {e}")
             # Clean up temp file if it exists
-            if temp_fd is not None:
-                try:
-                    os.close(temp_fd)
-                except OSError:
-                    pass
             if temp_path and temp_path.exists():
                 try:
                     temp_path.unlink()

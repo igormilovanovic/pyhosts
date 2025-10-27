@@ -2,6 +2,7 @@
 
 import unittest
 import tempfile
+from dataclasses import FrozenInstanceError
 from pathlib import Path
 from ipaddress import ip_address
 
@@ -21,7 +22,7 @@ class TestNewFeatures(unittest.TestCase):
         )
 
         # Should not be able to modify attributes
-        with self.assertRaises(Exception):  # FrozenInstanceError
+        with self.assertRaises(FrozenInstanceError):
             host.hostname = 'newhost'
 
     def test_host_from_line_with_comment(self):
