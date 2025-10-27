@@ -70,18 +70,20 @@ class Hosts(MutableSequence):
             logger.error(f"Error loading hosts file: {e}")
             raise
 
-    def save(self, backup: bool = False) -> None:
+    def save(self, backup: bool = False, write_header: bool = True) -> None:
         """Save the current hosts to the file.
 
         Args:
             backup: If True, create a backup of the original file before writing
+            write_header: If True, add a header comment to identify the file as managed by pyhosts
 
         Raises:
             IOError: If file cannot be written
         """
         self._ensure_loaded()
         logger.debug(f"Saving {len(self._hosts)} hosts to {self.file_path}")
-        HostsFileParser.write(self.file_path, self._hosts, backup=backup)
+        HostsFileParser.write(self.file_path, self._hosts, backup=backup,
+                              write_header=write_header)
         logger.info(f"Saved hosts to {self.file_path}")
 
     def find(self, query: str) -> List[Host]:
