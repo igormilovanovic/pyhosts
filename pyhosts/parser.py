@@ -82,7 +82,6 @@ class HostsFileParser:
                 raise
 
         # Write to temporary file first
-        temp_fd = None
         temp_path = None
 
         try:
