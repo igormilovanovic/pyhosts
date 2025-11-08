@@ -132,6 +132,6 @@ class HostsFileParser:
             if temp_path and temp_path.exists():
                 try:
                     temp_path.unlink()
-                except OSError:
-                    pass
+                except OSError as cleanup_error:
+                    logger.warning(f"Failed to delete temporary file {temp_path}: {cleanup_error}")
             raise
