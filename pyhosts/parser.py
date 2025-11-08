@@ -85,7 +85,6 @@ class HostsFileParser:
         temp_fd = None
         temp_path = None
 
-        temp_path = None
         try:
             # Create temp file in same directory as target for atomic rename
             temp_fd, temp_path_str = tempfile.mkstemp(
