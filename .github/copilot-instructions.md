@@ -8,7 +8,7 @@ pyhosts is a Python library for managing hosts files (e.g., `/etc/hosts`) in a P
 - Platform-independent (Linux, macOS, Windows)
 - Object-oriented interface for hosts entries
 - Support for IP addresses (IPv4 and IPv6), hostnames, aliases, and comments
-- Uses `netaddr` library for IP address handling
+- Zero external dependencies — uses Python standard library only
 
 ## Architecture
 
@@ -56,9 +56,8 @@ test/
 - Use Python 3.10+ features (e.g., type union syntax with `|`, match statements)
 
 ### Dependencies
-- Core dependencies: See `requirements.txt` (currently: netaddr)
+- No external runtime dependencies — uses Python standard library only (`ipaddress`, `dataclasses`, `pathlib`)
 - Test dependencies: See `test-requirements.txt` (pytest, pytest-cov, pycodestyle, pylint)
-- Key dependency: `netaddr` for IP address handling and validation
 - Type checking: Project includes type hints and `py.typed` marker
 - Configuration: `pyproject.toml` contains all project metadata and tool configuration
 
@@ -154,7 +153,7 @@ pycodestyle pyhosts/ --max-line-length=120
 ```
 
 ### Working with Host Entries
-- Each `Host` object is a dataclass with: `ipaddress` (IPAddress from netaddr), `hostname` (str), `aliases` (list[str] or None), `comments` (str or None)
+- Each `Host` object is a frozen dataclass with: `ip_address` (IPv4Address | IPv6Address), `hostname` (str), `aliases` (tuple[str, ...]), `comment` (str | None)
 - The `Hosts` class implements MutableSequence protocol (supports indexing, slicing, iteration, etc.)
 - Host entries can be accessed by hostname, alias, or IP address using attribute-style access
 - Use `Hosts.find()` to search for entries matching criteria
@@ -184,7 +183,7 @@ pycodestyle pyhosts/ --max-line-length=120
 
 ### Error Handling
 - Use custom exceptions: `PlatformNotSupportedError`, `DuplicateEntryError`
-- Handle `AddrFormatError` from netaddr for invalid IP addresses
+- Handle `ValueError` from `ipaddress` for invalid IP addresses
 - Provide clear error messages
 - All exceptions are exported from `pyhosts/__init__.py` for easy access
 
@@ -223,8 +222,8 @@ pycodestyle pyhosts/ --max-line-length=120
 - **Solution**: Check `platform_resolver.py` for supported platforms (Linux, Darwin/macOS, Windows)
 
 #### Invalid IP Address
-- **Symptom**: `AddrFormatError` from netaddr
-- **Solution**: Validate IP addresses before creating Host objects; use `netaddr.IPAddress()` for validation
+- **Symptom**: `ValueError` when creating Host with invalid IP
+- **Solution**: Validate IP addresses before creating Host objects; use `ipaddress.ip_address()` for validation
 
 #### Duplicate Entry Error
 - **Symptom**: `DuplicateEntryError` when adding hosts
@@ -245,6 +244,8 @@ pycodestyle pyhosts/ --max-line-length=120
 
 ## CI/CD
 
-- Travis CI is configured (`.travis.yml`)
-- CodeQL is enabled for security analysis (`.github/workflows/codeql.yml`)
+- GitHub Actions workflows in `.github/workflows/`
+- **Build and Test** (`build.yml`): Python 3.10–3.12 × Ubuntu/macOS/Windows matrix
+- **CodeQL** (`codeql.yml`): Security scanning on push/PR + weekly
+- **PyPI Publish** (`python-publish.yml`): Automated release to PyPI via trusted publishing
 - All tests must pass before merging

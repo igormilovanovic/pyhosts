@@ -10,7 +10,7 @@ from .hosts import Hosts, DuplicateEntryError
 from .models import Host
 from .platform_resolver import PlatformNotSupportedError
 
-__version__ = "1.0.0"
+__version__ = "0.2.0"
 
 __all__ = [
     'Hosts',
