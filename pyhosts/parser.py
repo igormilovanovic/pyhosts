@@ -82,10 +82,8 @@ class HostsFileParser:
                 raise
 
         # Write to temporary file first
-        temp_fd = None
         temp_path = None
 
-        temp_path = None
         try:
             # Create temp file in same directory as target for atomic rename
             temp_fd, temp_path_str = tempfile.mkstemp(
@@ -133,6 +131,6 @@ class HostsFileParser:
             if temp_path and temp_path.exists():
                 try:
                     temp_path.unlink()
-                except OSError:
-                    pass
+                except OSError as cleanup_error:
+                    logger.warning(f"Failed to delete temporary file {temp_path}: {cleanup_error}")
             raise
