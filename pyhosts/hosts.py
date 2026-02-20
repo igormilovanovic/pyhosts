@@ -24,6 +24,11 @@ class Hosts(MutableSequence):
     implementing the MutableSequence protocol and providing lazy loading,
     searching, and persistence capabilities.
 
+    Note:
+        This class is **not thread-safe**. If you need to access a ``Hosts``
+        instance from multiple threads, you must provide your own
+        synchronisation (e.g. a ``threading.Lock``).
+
     Attributes:
         file_path: Path to the hosts file
     """
