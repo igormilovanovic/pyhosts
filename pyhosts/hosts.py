@@ -123,13 +123,10 @@ class Hosts(MutableSequence):
         self._ensure_loaded()
 
         if not allow_duplicates:
-            # Check for duplicates by hostname or IP
+            # Check for duplicates by hostname only — same IP with different
+            # hostname is a common and valid hosts-file pattern.
             for existing in self._hosts:
-                if (
-                    existing.hostname == host.hostname or
-                    existing.ip_address == host.ip_address or
-                    set(existing.all_names) & set(host.all_names)
-                ):
+                if existing.hostname == host.hostname:
                     raise DuplicateEntryError(
                         f"Host entry conflicts with existing entry: {existing}"
                     )

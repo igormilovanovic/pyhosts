@@ -149,7 +149,7 @@ class TestNewFeatures(unittest.TestCase):
             temp_path.unlink()
 
     def test_hosts_add_duplicate_error(self):
-        """Test that adding a duplicate raises an error."""
+        """Test that adding a duplicate hostname raises an error."""
         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.hosts') as f:
             f.write('127.0.0.1 localhost\n')
             temp_path = Path(f.name)
@@ -158,12 +158,30 @@ class TestNewFeatures(unittest.TestCase):
             hosts = Hosts(file_path=temp_path)
 
             duplicate_host = Host(
-                ip_address=ip_address('127.0.0.1'),
-                hostname='duplicate',
+                ip_address=ip_address('10.0.0.1'),
+                hostname='localhost',
             )
 
             with self.assertRaises(DuplicateEntryError):
                 hosts.add(duplicate_host, allow_duplicates=False)
+        finally:
+            temp_path.unlink()
+
+    def test_hosts_add_same_ip_different_hostname(self):
+        """Test that same IP with different hostname is allowed."""
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.hosts') as f:
+            f.write('127.0.0.1 localhost\n')
+            temp_path = Path(f.name)
+
+        try:
+            hosts = Hosts(file_path=temp_path)
+
+            new_host = Host(
+                ip_address=ip_address('127.0.0.1'),
+                hostname='myapp.local',
+            )
+            hosts.add(new_host)
+            self.assertEqual(2, len(hosts))
         finally:
             temp_path.unlink()
 
