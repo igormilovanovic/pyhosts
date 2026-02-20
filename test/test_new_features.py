@@ -305,3 +305,39 @@ class TestNewFeatures(unittest.TestCase):
             self.assertIsNotNone(hosts2.find_one('newhost'))
         finally:
             temp_path.unlink()
+
+    def test_context_manager_saves_on_exit(self):
+        """Test that context manager auto-saves on clean exit."""
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.hosts') as f:
+            f.write('127.0.0.1 localhost\n')
+            temp_path = Path(f.name)
+
+        try:
+            with Hosts(file_path=temp_path) as hosts:
+                hosts.add(Host(ip_address=ip_address('10.0.0.1'), hostname='ctxhost'))
+
+            # Verify it was saved automatically
+            hosts2 = Hosts(file_path=temp_path)
+            self.assertIsNotNone(hosts2.find_one('ctxhost'))
+        finally:
+            temp_path.unlink()
+
+    def test_context_manager_no_save_on_exception(self):
+        """Test that context manager does not save when an exception occurs."""
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.hosts') as f:
+            f.write('127.0.0.1 localhost\n')
+            temp_path = Path(f.name)
+
+        try:
+            try:
+                with Hosts(file_path=temp_path) as hosts:
+                    hosts.add(Host(ip_address=ip_address('10.0.0.1'), hostname='badhost'))
+                    raise RuntimeError("something went wrong")
+            except RuntimeError:
+                pass
+
+            # Verify it was NOT saved
+            hosts2 = Hosts(file_path=temp_path)
+            self.assertIsNone(hosts2.find_one('badhost'))
+        finally:
+            temp_path.unlink()
