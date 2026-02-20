@@ -35,7 +35,7 @@ class HostsFileParser:
         hosts = []
 
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, encoding='utf-8') as f:
                 for line_num, line in enumerate(f, start=1):
                     try:
                         host = Host.from_line(line)
@@ -47,7 +47,7 @@ class HostsFileParser:
         except FileNotFoundError:
             logger.warning(f"Hosts file not found: {file_path}")
             raise
-        except IOError as e:
+        except OSError as e:
             logger.error(f"Error reading hosts file {file_path}: {e}")
             raise
 
@@ -78,7 +78,7 @@ class HostsFileParser:
             logger.debug(f"Creating backup at {backup_path}")
             try:
                 shutil.copy2(file_path, backup_path)
-            except IOError as e:
+            except OSError as e:
                 logger.error(f"Failed to create backup: {e}")
                 raise
 
@@ -120,7 +120,7 @@ class HostsFileParser:
                 if not (original_stat.st_mode & 0o002):
                     shutil.copystat(file_path, temp_path)
                 else:
-                    logger.warning(f"Original file has insecure permissions, using 0o644 instead")
+                    logger.warning("Original file has insecure permissions, using 0o644 instead")
 
             # Atomic rename
             temp_path.replace(file_path)

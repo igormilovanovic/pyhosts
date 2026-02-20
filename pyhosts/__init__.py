@@ -6,7 +6,7 @@ across different platforms (Linux, macOS, Windows).
 
 import logging
 
-from .hosts import Hosts, DuplicateEntryError
+from .hosts import DuplicateEntryError, Hosts
 from .models import Host
 from .platform_resolver import PlatformNotSupportedError
 

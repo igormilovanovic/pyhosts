@@ -31,9 +31,9 @@ jobs:
         pip install -r test-requirements.txt
         pip install .
 
-    - name: Lint with pycodestyle
+    - name: Lint with ruff
       run: |
-        pycodestyle pyhosts/ --max-line-length=120
+        ruff check pyhosts/
 
     - name: Type check with mypy
       run: |
