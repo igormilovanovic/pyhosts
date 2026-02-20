@@ -103,6 +103,11 @@ class TestHost(unittest.TestCase):
         with self.assertRaises(ValueError):
             Host(ip_address=ip_address('192.168.1.1'), hostname='test', comment='bad\ncomment')
 
+    def test_invalid_comment_with_carriage_return(self):
+        """Test that comment with carriage return raises ValueError."""
+        with self.assertRaises(ValueError):
+            Host(ip_address=ip_address('192.168.1.1'), hostname='test', comment='bad\rcomment')
+
     def test_invalid_comment_with_tab(self):
         """Test that comment with tab raises ValueError."""
         with self.assertRaises(ValueError):
