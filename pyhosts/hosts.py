@@ -237,7 +237,7 @@ class Hosts(MutableSequence):
 
     # Context manager support
 
-    def __enter__(self) -> 'Hosts':
+    def __enter__(self) -> Hosts:
         """Enter the context manager."""
         return self
 

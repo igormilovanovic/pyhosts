@@ -72,5 +72,6 @@ select = [
     "UP", # pyupgrade
 ]
 ignore = [
-    "E501", # line too long (handled by formatter)
+    "E501",  # line too long (handled by formatter)
+    "UP038", # isinstance with union type (unsafe at runtime)
 ]
