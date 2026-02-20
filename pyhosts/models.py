@@ -1,10 +1,11 @@
 """Data models for pyhosts library."""
 
+from __future__ import annotations
+
 import logging
 from dataclasses import dataclass
 from functools import cached_property
 from ipaddress import IPv4Address, IPv6Address, ip_address
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +27,7 @@ class Host:
     ip_address: IPv4Address | IPv6Address
     hostname: str
     aliases: tuple[str, ...] = ()
-    comment: Optional[str] = None
+    comment: str | None = None
 
     def __post_init__(self):
         """Validate the host entry after initialization."""
@@ -44,7 +45,7 @@ class Host:
             raise ValueError("comment cannot contain newlines, carriage returns, or tab characters")
 
     @classmethod
-    def from_line(cls, line: str) -> Optional['Host']:
+    def from_line(cls, line: str) -> Host | None:
         """Parse a line from the hosts file into a Host object.
 
         Args:
