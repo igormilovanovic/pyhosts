@@ -1,11 +1,12 @@
 """Parser for reading and writing hosts files."""
 
+from __future__ import annotations
+
 import logging
 import os
 import shutil
 import tempfile
 from pathlib import Path
-from typing import List
 
 from .models import Host
 
@@ -16,7 +17,7 @@ class HostsFileParser:
     """Parser for reading and writing hosts files."""
 
     @staticmethod
-    def parse(file_path: Path) -> List[Host]:
+    def parse(file_path: Path) -> list[Host]:
         """Parse a hosts file and return a list of Host objects.
 
         Args:
@@ -54,7 +55,7 @@ class HostsFileParser:
         return hosts
 
     @staticmethod
-    def write(file_path: Path, hosts: List[Host], backup: bool = False,
+    def write(file_path: Path, hosts: list[Host], backup: bool = False,
               write_header: bool = True) -> None:
         """Write hosts to a file using atomic write operation.
 

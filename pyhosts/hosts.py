@@ -1,9 +1,10 @@
 """Main Hosts class for managing hosts file entries."""
 
+from __future__ import annotations
+
 import logging
 from collections.abc import MutableSequence
 from pathlib import Path
-from typing import List, Optional, Union
 
 from .models import Host
 from .parser import HostsFileParser
@@ -28,7 +29,7 @@ class Hosts(MutableSequence):
         file_path: Path to the hosts file
     """
 
-    def __init__(self, file_path: Optional[Path] = None):
+    def __init__(self, file_path: Path | None = None):
         """Initialize the Hosts manager.
 
         Args:
@@ -41,7 +42,7 @@ class Hosts(MutableSequence):
         else:
             self.file_path = Path(file_path) if not isinstance(file_path, Path) else file_path
 
-        self._hosts: Optional[List[Host]] = None
+        self._hosts: list[Host] | None = None
         self._loaded = False
 
         logger.debug(f"Initialized Hosts manager for {self.file_path}")
@@ -86,7 +87,7 @@ class Hosts(MutableSequence):
                               write_header=write_header)
         logger.info(f"Saved hosts to {self.file_path}")
 
-    def find(self, query: str) -> List[Host]:
+    def find(self, query: str) -> list[Host]:
         """Find all hosts matching a query.
 
         Args:
@@ -98,7 +99,7 @@ class Hosts(MutableSequence):
         self._ensure_loaded()
         return [host for host in self._hosts if host.matches(query)]
 
-    def find_one(self, query: str) -> Optional[Host]:
+    def find_one(self, query: str) -> Host | None:
         """Find the first host matching a query.
 
         Args:
@@ -165,17 +166,17 @@ class Hosts(MutableSequence):
         self._ensure_loaded()
         return len(self._hosts)
 
-    def __getitem__(self, index: Union[int, slice]) -> Union[Host, List[Host]]:
+    def __getitem__(self, index: int | slice) -> Host | list[Host]:
         """Get host(s) by index or slice."""
         self._ensure_loaded()
         return self._hosts[index]
 
-    def __setitem__(self, index: Union[int, slice], value: Union[Host, List[Host]]) -> None:
+    def __setitem__(self, index: int | slice, value: Host | list[Host]) -> None:
         """Set host(s) by index or slice."""
         self._ensure_loaded()
         self._hosts[index] = value
 
-    def __delitem__(self, index: Union[int, slice]) -> None:
+    def __delitem__(self, index: int | slice) -> None:
         """Delete host(s) by index or slice."""
         self._ensure_loaded()
         del self._hosts[index]
@@ -185,7 +186,7 @@ class Hosts(MutableSequence):
         self._ensure_loaded()
         self._hosts.insert(index, value)
 
-    def __contains__(self, item: Union[Host, str]) -> bool:
+    def __contains__(self, item: Host | str) -> bool:
         """Check if a host or query matches any entry.
 
         Args:
@@ -203,7 +204,7 @@ class Hosts(MutableSequence):
         else:
             return False
 
-    def __getattr__(self, name: str) -> Optional[Host]:
+    def __getattr__(self, name: str) -> Host | None:
         """Get a host by hostname, alias, or IP address.
 
         This provides attribute-style access to hosts.
@@ -233,7 +234,7 @@ class Hosts(MutableSequence):
         return f"Hosts file: {self.file_path}"
 
     # Backward compatibility alias
-    def persist(self, path: Optional[Path] = None) -> None:
+    def persist(self, path: Path | None = None) -> None:
         """Persist hosts to file (backward compatibility).
 
         Args:
