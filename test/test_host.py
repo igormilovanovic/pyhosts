@@ -83,6 +83,11 @@ class TestHost(unittest.TestCase):
         with self.assertRaises(ValueError):
             Host(ip_address=ip_address('192.168.1.1'), hostname='')
 
+    def test_invalid_hostname_whitespace(self):
+        """Test that whitespace-only hostname raises ValueError."""
+        with self.assertRaises(ValueError):
+            Host(ip_address=ip_address('192.168.1.1'), hostname='   ')
+
     def test_invalid_hostname_type(self):
         """Test that non-string hostname raises ValueError."""
         with self.assertRaises(ValueError):
