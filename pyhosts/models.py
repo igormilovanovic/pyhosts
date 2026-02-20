@@ -33,7 +33,7 @@ class Host:
         if not isinstance(self.ip_address, (IPv4Address, IPv6Address)):
             raise TypeError(f"ip_address must be IPv4Address or IPv6Address, got {type(self.ip_address)}")
 
-        if not self.hostname or not isinstance(self.hostname, str):
+        if not isinstance(self.hostname, str) or not self.hostname.strip():
             raise ValueError("hostname must be a non-empty string")
 
         if not isinstance(self.aliases, tuple):
