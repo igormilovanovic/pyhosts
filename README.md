@@ -111,6 +111,8 @@ The main class for managing the hosts file.
 
 Supports full `MutableSequence` interface: indexing, slicing, iteration, `len()`, `in`, `del`.
 
+> **Note:** `Hosts` is not thread-safe. Use external synchronisation (e.g. `threading.Lock`) when sharing an instance across threads.
+
 ### `Host`
 
 Immutable (frozen) dataclass representing a single hosts file entry.
