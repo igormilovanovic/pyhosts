@@ -221,6 +221,18 @@ class Hosts(MutableSequence):
         self._ensure_loaded()
         return self.find_one(name)
 
+    # Context manager support
+
+    def __enter__(self) -> 'Hosts':
+        """Enter the context manager."""
+        return self
+
+    def __exit__(self, exc_type: type | None, exc_val: BaseException | None,
+                 exc_tb: object) -> None:
+        """Exit the context manager, saving on clean exit."""
+        if exc_type is None:
+            self.save()
+
     def __repr__(self) -> str:
         """Developer-friendly representation."""
         if self._loaded:
