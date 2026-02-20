@@ -62,12 +62,13 @@ class PlatformResolverFactory:
         """
         system = platform.system()
 
-        if system in ('Linux', 'Darwin'):
-            return UnixResolver()
-        elif system == 'Windows':
-            return WindowsResolver()
-        else:
-            raise PlatformNotSupportedError(
-                f"Platform '{system}' is not supported. "
-                f"Supported platforms: Linux, Darwin (macOS), Windows"
-            )
+        match system:
+            case 'Linux' | 'Darwin':
+                return UnixResolver()
+            case 'Windows':
+                return WindowsResolver()
+            case _:
+                raise PlatformNotSupportedError(
+                    f"Platform '{system}' is not supported. "
+                    f"Supported platforms: Linux, Darwin (macOS), Windows"
+                )
