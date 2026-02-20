@@ -2,14 +2,13 @@
 
 import logging
 from dataclasses import dataclass
-from functools import cached_property
 from ipaddress import IPv4Address, IPv6Address, ip_address
 from typing import Optional
 
 logger = logging.getLogger(__name__)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Host:
     """Represents a single host entry in the hosts file.
 
@@ -122,7 +121,7 @@ class Host:
 
         return line + '\n'
 
-    @cached_property
+    @property
     def all_names(self) -> tuple[str, ...]:
         """Get all names (hostname and aliases) for this host.
 
