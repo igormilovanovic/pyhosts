@@ -28,7 +28,7 @@ class Host:
     aliases: tuple[str, ...] = ()
     comment: str | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validate the host entry after initialization."""
         if not isinstance(self.ip_address, (IPv4Address, IPv6Address)):
             raise TypeError(f"ip_address must be IPv4Address or IPv6Address, got {type(self.ip_address)}")

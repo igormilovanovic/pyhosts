@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import MutableSequence
 from pathlib import Path
+from typing import Any, overload
 
 from .models import Host
 from .parser import HostsFileParser
@@ -47,7 +48,7 @@ class Hosts(MutableSequence):
         else:
             self.file_path = Path(file_path) if not isinstance(file_path, Path) else file_path
 
-        self._hosts: list[Host] | None = None
+        self._hosts: list[Host] = []
         self._loaded = False
 
         logger.debug(f"Initialized Hosts manager for {self.file_path}")
@@ -140,7 +141,7 @@ class Hosts(MutableSequence):
         self._hosts.append(host)
         logger.debug(f"Added host: {host}")
 
-    def remove(self, query: str) -> int:
+    def remove(self, query: str) -> int:  # type: ignore[override]
         """Remove all hosts matching a query.
 
         Args:
@@ -168,12 +169,22 @@ class Hosts(MutableSequence):
         self._ensure_loaded()
         return len(self._hosts)
 
+    @overload
+    def __getitem__(self, index: int) -> Host: ...
+    @overload
+    def __getitem__(self, index: slice) -> list[Host]: ...
+
     def __getitem__(self, index: int | slice) -> Host | list[Host]:
         """Get host(s) by index or slice."""
         self._ensure_loaded()
         return self._hosts[index]
 
-    def __setitem__(self, index: int | slice, value: Host | list[Host]) -> None:
+    @overload
+    def __setitem__(self, index: int, value: Host) -> None: ...
+    @overload
+    def __setitem__(self, index: slice, value: Any) -> None: ...
+
+    def __setitem__(self, index: int | slice, value: Any) -> None:
         """Set host(s) by index or slice."""
         self._ensure_loaded()
         self._hosts[index] = value
@@ -188,7 +199,7 @@ class Hosts(MutableSequence):
         self._ensure_loaded()
         self._hosts.insert(index, value)
 
-    def __contains__(self, item: Host | str) -> bool:
+    def __contains__(self, item: object) -> bool:
         """Check if a host or query matches any entry.
 
         Args:
