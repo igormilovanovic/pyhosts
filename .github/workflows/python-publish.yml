@@ -3,15 +3,6 @@ name: Upload Python Package
 on:
   release:
     types: [published]
-  workflow_dispatch:
-    inputs:
-      target:
-        description: "Publish target"
-        required: true
-        default: "testpypi"
-        type: choice
-        options:
-          - testpypi
 
 permissions:
   contents: write
@@ -45,34 +36,8 @@ jobs:
         run: |
           gh release upload "${{ github.event.release.tag_name }}" dist/* --clobber
 
-  testpypi-publish:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
-    needs:
-      - release-build
-    permissions:
-      id-token: write
-
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/pyhosts
-
-    steps:
-      - name: Retrieve release distributions
-        uses: actions/download-artifact@v4
-        with:
-          name: release-dists
-          path: dist/
-
-      - name: Publish to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          packages-dir: dist/
-
   pypi-publish:
     runs-on: ubuntu-latest
-    if: github.event_name == 'release'
     needs:
       - release-build
     permissions:
